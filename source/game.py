@@ -1,9 +1,9 @@
-from constants import *
-from pieces import *
-from pieces_table import *
-from copy import deepcopy
 import time as t
 
+from const import *
+from pieces import *
+from pieces_table_value import *
+from copy import deepcopy
 
 
 class ChessGame():

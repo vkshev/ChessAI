@@ -1,6 +1,7 @@
-from pieces import *
-from constants import *
 import math
+
+from pieces import *
+from const import *
 
 
 class ChessBoard:

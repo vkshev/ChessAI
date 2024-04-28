@@ -1,8 +1,10 @@
-from constants import *
 import pygame as pg
-import utility
+import util
 import copy
- 
+
+from const import *
+
+
 class GUI:
     def __init__(self):
         self.board = BoardGUI()
@@ -114,19 +116,19 @@ class GUI:
     def draw_move_time(self, window, game, color, position_multiplier):
         font_size = 25
         if color == "white":
-            self.draw_text(window, f'{utility.format_time(game.white_move_clock)}', (COLS-1)*SQUARE_SIZE-20, BOARD_FRAME_WIDTH+15 + position_multiplier*SQUARE_SIZE, font_size, WHITE_COLOR, self.font25)
+            self.draw_text(window, f'{util.format_time(game.white_move_clock)}', (COLS-1)*SQUARE_SIZE-20, BOARD_FRAME_WIDTH+15 + position_multiplier*SQUARE_SIZE, font_size, WHITE_COLOR, self.font25)
         else: 
-            self.draw_text(window, f'{utility.format_time(game.black_move_clock)}', (COLS-1)*SQUARE_SIZE-20, (BOARD_FRAME_WIDTH/2)-5 + position_multiplier*SQUARE_SIZE, font_size, WHITE_COLOR, self.font25)
+            self.draw_text(window, f'{util.format_time(game.black_move_clock)}', (COLS-1)*SQUARE_SIZE-20, (BOARD_FRAME_WIDTH/2)-5 + position_multiplier*SQUARE_SIZE, font_size, WHITE_COLOR, self.font25)
 
     def draw_clock(self, window, game):
-        self.draw_text(window, f'{utility.format_time(game.white_clock)}', COLS*SQUARE_SIZE, BOARD_FRAME_WIDTH+10 + 9*SQUARE_SIZE, 35, WHITE_COLOR, self.font35)
-        self.draw_text(window, f'{utility.format_time(game.black_clock)}', COLS*SQUARE_SIZE, (BOARD_FRAME_WIDTH/2)-10 + 0*SQUARE_SIZE, 35, WHITE_COLOR, self.font35)
+        self.draw_text(window, f'{util.format_time(game.white_clock)}', COLS*SQUARE_SIZE, BOARD_FRAME_WIDTH+10 + 9*SQUARE_SIZE, 35, WHITE_COLOR, self.font35)
+        self.draw_text(window, f'{util.format_time(game.black_clock)}', COLS*SQUARE_SIZE, (BOARD_FRAME_WIDTH/2)-10 + 0*SQUARE_SIZE, 35, WHITE_COLOR, self.font35)
 
 
 class PlayerCaptureStats(GUI):
     def __init__(self, color="white"):
         self.color = color
-        self.piece_mini_images = utility.load_piece_images(width=50, height=50)
+        self.piece_mini_images = util.load_piece_images(width=50, height=50)
         if self.color == "white":
             self.x = LEFT_SIDE_PADDING 
             self.y = 10*SQUARE_SIZE - SQUARE_SIZE/2
@@ -359,7 +361,7 @@ class PlayerSettings(GUI):
 
 class BoardGUI:
     def __init__(self):
-        self.piece_images = utility.load_piece_images(width=SQUARE_SIZE, height=SQUARE_SIZE)
+        self.piece_images = util.load_piece_images(width=SQUARE_SIZE, height=SQUARE_SIZE)
         self.font40 = pg.font.Font('freesansbold.ttf', 40)
 
 

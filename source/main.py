@@ -3,11 +3,11 @@ if __name__ == "__main__":
     import timeit
     import threading
 
-    from constants import *
+    from const import *
     from board import ChessBoard
     from game import ChessGame
-    from AI_mp import ChessAI, handle_ai_move
-    from gui import GUI
+    from AI_algorithm import ChessAI, handle_ai_move
+    from gui_interface import GUI
     
 
 def main():

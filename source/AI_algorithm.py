@@ -1,10 +1,11 @@
-from pieces import *
-from copy import deepcopy
-import timeit
-import time as t
-from multiprocessing import Pool, Manager, cpu_count
 import ctypes
 import random as rnd
+import timeit
+import time as t
+
+from pieces import *
+from copy import deepcopy
+from multiprocessing import Pool, Manager, cpu_count
 
 
 MATE = 10000

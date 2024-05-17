@@ -1,4 +1,5 @@
 import time as t
+import utils
 
 from const import *
 from pieces import *
@@ -281,32 +282,45 @@ class ChessGame():
     
     def execute_move(self, board, original_square, new_square=None):
         self.move_count += 1
-        if  original_square is None:
+        if original_square is None:
             original_square = self.selected_square
-        
-        if isinstance(board.board[original_square], King):
-            if original_square - new_square == -2: 
+
+        # Ensure the piece is not None
+        piece = board.get_piece(original_square)
+        if piece is None:
+            print(f"No piece at the original square: {original_square}")
+            return
+
+        is_capture = board.contains_piece(new_square)
+
+        if isinstance(piece, King):
+            if original_square - new_square == -2:
                 board.move_king(original_square, new_square, castle="kingside")
-            elif original_square - new_square == 2: 
+            elif original_square - new_square == 2:
                 board.move_king(original_square, new_square, castle="queenside")
             else:
                 board.move_king(original_square, new_square)
-
-        elif isinstance(board.board[original_square], Pawn):
-            if new_square >= 56:
-                board.move_pawn_promote(original_square, new_square, "white")
-            elif new_square <= 7:
-                board.move_pawn_promote(original_square, new_square, "black")
-            elif isinstance(board.last_move[0], Pawn):
-                if (abs(original_square - new_square) == 7 or abs(original_square - new_square) == 9) \
-                and not board.contains_piece(new_square):
-                    board.move_en_passant(original_square, new_square)
-                else:
-                    board.move_piece(original_square, new_square)
+        elif isinstance(piece, Pawn):
+            if new_square >= 56 or new_square <= 7:
+                board.move_pawn_promote(original_square, new_square, piece.color)
+            elif isinstance(board.last_move[0], Pawn) and (abs(original_square - new_square) == 7 or abs(original_square - new_square) == 9) and not board.contains_piece(new_square):
+                board.move_en_passant(original_square, new_square)
+                is_capture = True
             else:
                 board.move_piece(original_square, new_square)
         else:
             board.move_piece(original_square, new_square)
+
+        # Update the board representation
+        board.int_board[new_square] = piece.number
+        board.int_board[original_square] = None
+
+        if is_capture:
+            utils.play_capture_sound()
+        else:
+            utils.play_move_sound()
+
+
         
     def update_gamestate(self, board):
         self.update_attacked_squares(board)

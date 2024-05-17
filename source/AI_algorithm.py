@@ -2,6 +2,7 @@ import ctypes
 import random as rnd
 import timeit
 import time as t
+import utils
 
 from pieces import *
 from copy import deepcopy
@@ -35,9 +36,19 @@ def handle_ai_move(ai, game, board):
         game.ai_move = None
     else:
         game.ai_move = (selected_square, new_square)
-        
+        piece = board.get_piece(selected_square)
+        if piece is None:
+            print(f"AI attempted to move from an empty square: {selected_square}")
+            return
 
+        is_capture = board.contains_piece(new_square)
+        game.execute_move(board, selected_square, new_square)
+        if is_capture:
+            utils.play_capture_sound()
+        else:
+            utils.play_move_sound()
 
+            
 class ChessAI:
     def __init__(self, depth, depth_inc, ai_color):
         self.depth = depth

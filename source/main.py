@@ -2,7 +2,8 @@ if __name__ == "__main__":
     import pygame as pg
     import timeit
     import threading
-
+    import utils
+    
     from const import *
     from board import ChessBoard
     from game import ChessGame
@@ -20,6 +21,9 @@ def main():
     board = ChessBoard()    # Board data
     game = ChessGame(white_clock=900, black_clock=900, increment=0)    # Game logic and game status
     gui = GUI()  # Graphics and IO handler
+
+    # Sounds
+    utils.init_sounds()
 
     # Set up the pieces on the board based on FEN string
     fen = STARTING_FEN

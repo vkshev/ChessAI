@@ -2,7 +2,6 @@ import pygame as pg
 import utils
 import copy
 
-
 from const import *
 
 
@@ -19,7 +18,39 @@ class GUI:
         self.black_player_capture = PlayerCaptureStats("black")
         self.font35 = pg.font.Font('freesansbold.ttf', 35)
         self.font25 = pg.font.Font('freesansbold.ttf', 25)
+
+        # Promotion
+        self.promotion_pieces = ['queen', 'rook', 'bishop', 'knight']
+        self.promotion_buttons = []
+        self.create_promotion_buttons()
+
+    def create_promotion_buttons(self):
+        button_width = 150
+        button_height = 50
+        x_position = (WIDTH - button_width) // 2  # Center horizontally
+        starting_y_position = (HEIGHT - (button_height * len(self.promotion_pieces))) // 2  # Center vertically
         
+        for i, piece in enumerate(self.promotion_pieces):
+            button = Button(
+                text=piece.capitalize(), 
+                color=GRAY_COLOR, 
+                frame_color=WHITE_COLOR, 
+                position=(x_position, starting_y_position + i * (button_height + 10)),  # Add some vertical spacing
+                width=button_width, 
+                height=button_height, 
+                font_size=30
+            )
+            self.promotion_buttons.append(button)
+
+    def draw_promotion_buttons(self, window):
+        for button in self.promotion_buttons:
+            button.draw(window)
+
+    def handle_promotion_selection(self, event):
+        for button in self.promotion_buttons:
+            if button.is_clicked(event.pos):
+                return button.text.lower()
+        return None
 
     def list_buttons(self):
         buttons = []
@@ -262,6 +293,10 @@ class Button(GUI):
         pg.draw.rect(window, self.current_frame_color, (self.x, self.y, self.width, self.height))
         pg.draw.rect(window, self.color, (self.x+5, self.y+5, self.width-10, self.height-10))
         self.draw_text(window, self.text, self.x+10, self.y+15, self.font_size, self.text_color, self.font)   
+
+    def is_clicked(self, mouse_pos):
+        x, y = mouse_pos
+        return self.x <= x <= self.x + self.width and self.y <= y <= self.y + self.height
 
 class PlayerSettings(GUI):
     def __init__(self, color):

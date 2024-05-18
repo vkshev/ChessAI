@@ -1,15 +1,16 @@
-if __name__ == "__main__":
-    import pygame as pg
-    import timeit
-    import threading
-    import utils
-    
-    from const import *
-    from board import ChessBoard
-    from game import ChessGame
-    from AI_algorithm import ChessAI, handle_ai_move
-    from gui_interface import GUI
-    
+import pygame as pg
+import timeit
+import threading
+import utils
+
+from const import *
+from board import ChessBoard
+from game import ChessGame
+from AI_algorithm import ChessAI, handle_ai_move
+from gui_interface import GUI
+from os import environ
+
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1' # Get rid of the constant "Hello from Pygame" message
 
 def main():
     FPS = 10
@@ -188,16 +189,13 @@ def main():
                     game_running = False
 
                 if event.type == pg.MOUSEBUTTONDOWN:
-                    if event.pos[0] > (COLS*SQUARE_SIZE)+(2*BOARD_FRAME_WIDTH):
+                    if event.pos[0] > (COLS * SQUARE_SIZE) + (2 * BOARD_FRAME_WIDTH):
                         stop_btn_press = gui.mouse_click(event)
-
                         if stop_btn_press:
                             gui.enable_settings()
                             game_running = False
-                            
 
                 if not ai_finding_move:
-
                     # Player move, selecting piece
                     if event.type == pg.MOUSEBUTTONDOWN and game.selected_square is None:
                         if game.selected_square is None:
@@ -209,12 +207,13 @@ def main():
                                         game.selected_square = square
                                         gui.draw(window, board, game, square)
                                         gui.board.draw_valid_moves(window, valid_moves)
+
                                     
                     # Player move, dropping selected piece
                     elif event.type == pg.MOUSEBUTTONUP and game.selected_square is not None:
                         new_square = board.select_square_by_mouse_click(event)
                         if new_square in valid_moves:
-                            game.execute_move(board, None, new_square)
+                            game.execute_move(board, None, new_square, window, gui)  # Pass window and gui here
                             game.clock_increment()
                             game.update_attacked_squares(board)
                             game.swap_turn()

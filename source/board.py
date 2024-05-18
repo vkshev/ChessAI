@@ -116,9 +116,10 @@ class ChessBoard:
         self.move_piece(original_square, new_square)
         
 
-    def move_pawn_promote(self, original_square, new_square, color):
+    def move_pawn_promote(self, original_square, new_square, color, promoted_piece):
         self.move_piece(original_square, new_square)
-        self.add_piece(Queen(color), new_square)
+        piece_classes = {'queen': Queen, 'rook': Rook, 'bishop': Bishop, 'knight': Knight}
+        self.add_piece(piece_classes[promoted_piece](color), new_square)
 
 
     def select_square_by_mouse_click(self, event):

@@ -213,7 +213,7 @@ def main():
                     elif event.type == pg.MOUSEBUTTONUP and game.selected_square is not None:
                         new_square = board.select_square_by_mouse_click(event)
                         if new_square in valid_moves:
-                            game.execute_move(board, None, new_square, window, gui)  # Pass window and gui here
+                            game.execute_move(board, None, new_square, window, gui)
                             game.clock_increment()
                             game.update_attacked_squares(board)
                             game.swap_turn()

@@ -1,5 +1,6 @@
 import time as t
 import utils
+import pygame
 
 from const import *
 from pieces import *
@@ -280,12 +281,13 @@ class ChessGame():
 
         return evaluation, len(pieces)
     
-    def execute_move(self, board, original_square, new_square=None):
+    # game.py
+
+    def execute_move(self, board, original_square, new_square=None, window=None, gui=None):
         self.move_count += 1
         if original_square is None:
             original_square = self.selected_square
 
-        # Ensure the piece is not None
         piece = board.get_piece(original_square)
         if piece is None:
             print(f"No piece at the original square: {original_square}")
@@ -302,7 +304,8 @@ class ChessGame():
                 board.move_king(original_square, new_square)
         elif isinstance(piece, Pawn):
             if new_square >= 56 or new_square <= 7:
-                board.move_pawn_promote(original_square, new_square, piece.color)
+                promoted_piece = self.choose_promotion_piece(window, board, gui)
+                board.move_pawn_promote(original_square, new_square, piece.color, promoted_piece)
             elif isinstance(board.last_move[0], Pawn) and (abs(original_square - new_square) == 7 or abs(original_square - new_square) == 9) and not board.contains_piece(new_square):
                 board.move_en_passant(original_square, new_square)
                 is_capture = True
@@ -311,7 +314,6 @@ class ChessGame():
         else:
             board.move_piece(original_square, new_square)
 
-        # Update the board representation
         board.int_board[new_square] = piece.number
         board.int_board[original_square] = None
 
@@ -320,8 +322,24 @@ class ChessGame():
         else:
             utils.play_move_sound()
 
+    def choose_promotion_piece(self, window, board, gui):
+        running = True
+        promoted_piece = None
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    promoted_piece = gui.handle_promotion_selection(event)
+                    if promoted_piece:
+                        running = False
+            gui.draw(window, board, self)
+            gui.draw_promotion_buttons(window)
+            pygame.display.flip()
+        return promoted_piece if promoted_piece else 'queen'
 
-        
+
+
     def update_gamestate(self, board):
         self.update_attacked_squares(board)
         self.swap_turn()
